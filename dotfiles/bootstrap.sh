@@ -2,7 +2,7 @@
 set -e
 
 # ==========================================
-# 設定: GitHubのリポジトリURL
+# 設定: GitHubのリポジトリ情報
 # ==========================================
 REPO_URL="https://github.com/saito-programming/dotfiles.git"
 DOTFILES_DIR="$HOME/dotfiles"
@@ -59,15 +59,13 @@ fi
 
 echo "=== 3. dotfiles リポジトリの準備 ==="
 if [ ! -d "$DOTFILES_DIR" ]; then
-  echo "Cloning dotfiles repository..."
+  echo "Cloning dotfiles repository from $REPO_URL..."
   git clone "$REPO_URL" "$DOTFILES_DIR"
 else
-  echo "Updating existing dotfiles repository..."
-  cd "$DOTFILES_DIR"
-  git pull origin main || true
+  echo "dotfiles repository already exists at $DOTFILES_DIR"
 fi
 
-echo "=== 4. 既存設定ファイルのバックアップ & GNU Stow の適用 ==="
+echo "=== 4. 既存設定ファイルのバックアップ & GNU Stow の全自動適用 ==="
 cd "$DOTFILES_DIR"
 
 # Stow 実行時のコンフリクト（競合）を防ぐため、実体ファイルが存在すれば .bak にリネーム
@@ -82,9 +80,11 @@ backup_if_exists() {
 backup_if_exists "$HOME/.zshrc"
 backup_if_exists "$HOME/.tmux.conf"
 
-# stow 実行
-for pkg in zsh tmux fzf ripgrep fd zoxide tree stow micro bat; do
-  if [ -d "$pkg" ]; then
+# dotfiles ディレクトリ内のすべてのフォルダ（ディレクトリ）を対象にして stow -R を実行
+for dir in */; do
+  pkg="${dir%/}"
+  # .git などの隠しディレクトリを除外
+  if [[ "$pkg" != .* ]]; then
     echo "Stowing $pkg..."
     stow -R "$pkg"
   fi
