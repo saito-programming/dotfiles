@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
+# ==========================================
+# 設定: GitHubのリポジトリURL
+# ==========================================
+REPO_URL="https://github.com/saito-programming/dotfiles.git"
+DOTFILES_DIR="$HOME/dotfiles"
+
 echo "=== 1. システムパッケージの更新とインストール ==="
 sudo apt update
 sudo apt install -y \
@@ -51,8 +57,17 @@ else
   cd "$HOME"
 fi
 
-echo "=== 3. 既存設定ファイルのバックアップ & GNU Stow の適用 ==="
-DOTFILES_DIR="$HOME/dotfiles"
+echo "=== 3. dotfiles リポジトリの準備 ==="
+if [ ! -d "$DOTFILES_DIR" ]; then
+  echo "Cloning dotfiles repository..."
+  git clone "$REPO_URL" "$DOTFILES_DIR"
+else
+  echo "Updating existing dotfiles repository..."
+  cd "$DOTFILES_DIR"
+  git pull origin main || true
+fi
+
+echo "=== 4. 既存設定ファイルのバックアップ & GNU Stow の適用 ==="
 cd "$DOTFILES_DIR"
 
 # Stow 実行時のコンフリクト（競合）を防ぐため、実体ファイルが存在すれば .bak にリネーム
