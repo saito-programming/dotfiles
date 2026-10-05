@@ -18,7 +18,7 @@ Raspberry Pi OS（Debian）向けの自動環境構築 ＆ GNU Stow ドットフ
 ## クイックスタート
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/saito-programming/dotfiles/main/dotfiles/bootstrap.sh | bash
+curl -fsSL https://raw.githubusercontent.com/saito-programming/dotfiles/main/bootstrap.sh | bash
 ```
 
 ## ディレクトリ構成
