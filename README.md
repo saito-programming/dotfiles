@@ -14,7 +14,7 @@ Raspberry Pi OS（Debian）向けの自動環境構築 ＆ GNU Stow ドットフ
 - **zoxide**: ディレクトリ高速移動 (`apt`)
 - **tree**: ディレクトリ階層表示 (`apt`)
 - **stow**: ドットファイル管理 (`apt`)
-- **yazi**: 高速TUIファイルマネージャー (`cargo`)
+- **yazi**: 高速TUIファイルマネージャー (`apt`)
 
 ## クイックスタート
 
@@ -35,7 +35,7 @@ curl -fsSL https://raw.githubusercontent.com/saito-programming/dotfiles/main/boo
 ├── micro/
 │   └── .config/micro/
 ├── yazi/
-│   └── .config/yazi/
+│   └── .config/yazi/yazi.toml
 ├── fzf/
 ├── ripgrep/
 ├── fd/
