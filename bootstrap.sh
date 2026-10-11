@@ -59,18 +59,11 @@ else
   cd "$HOME"
 fi
 
-# Rust / Cargo の確認とインストール（Yaziのビルドに必要）
-if ! command -v cargo &> /dev/null; then
-  echo "Installing Rust (rustup)..."
-  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-  source "$HOME/.cargo/env"
-else
-  echo "Rust is already installed."
-fi
-
-# yazi (cargo 経由で最新版をインストール)
-echo "Installing yazi via cargo..."
-cargo install --locked yazi-cli yazi-fm
+# yazi (公式APTリポジトリ経由でインストール)
+echo "Installing yazi..."
+curl -fsSL https://yazi-rs.github.io/builds/yazi-keyring.gpg | sudo tee /usr/share/keyrings/yazi-keyring.gpg >/dev/null
+echo 'deb [signed-by=/usr/share/keyrings/yazi-keyring.gpg] https://yazi-rs.github.io/builds/ stable main' | sudo tee /etc/apt/sources.list.d/yazi.list >/dev/null
+sudo apt update && sudo apt install -y yazi
 
 echo "=== 3. dotfiles リポジトリの準備 ==="
 if [ ! -d "$DOTFILES_DIR" ]; then
