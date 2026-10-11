@@ -20,7 +20,9 @@ sudo apt install -y \
   tree \
   bat \
   zoxide \
-  build-essential
+  build-essential \
+  libssl-dev \
+  pkg-config
 
 echo "=== 2. 個別ツールの追加・最新版セットアップ ==="
 mkdir -p ~/.local/bin
@@ -56,6 +58,19 @@ else
   cd ~/.fzf && git pull && ./install --all --no-bash --no-fish
   cd "$HOME"
 fi
+
+# Rust / Cargo の確認とインストール（Yaziのビルドに必要）
+if ! command -v cargo &> /dev/null; then
+  echo "Installing Rust (rustup)..."
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  source "$HOME/.cargo/env"
+else
+  echo "Rust is already installed."
+fi
+
+# yazi (cargo 経由で最新版をインストール)
+echo "Installing yazi via cargo..."
+cargo install --locked yazi-cli yazi-fm
 
 echo "=== 3. dotfiles リポジトリの準備 ==="
 if [ ! -d "$DOTFILES_DIR" ]; then
@@ -95,6 +110,7 @@ echo "主要ツールのバージョン確認:"
 echo "- micro:  $(~/.local/bin/micro -version 2>/dev/null || echo 'Not found')"
 echo "- fzf:    $(~/.fzf/bin/fzf --version 2>/dev/null || echo 'Not found')"
 echo "- zoxide: $(zoxide --version 2>/dev/null || echo 'Not found')"
+echo "- yazi:   $(yazi --version 2>/dev/null || echo 'Not found')"
 echo ""
 echo "デフォルトシェルを zsh に変更する場合は以下を実行してください:"
 echo "  chsh -s \$(which zsh)"
